@@ -17,7 +17,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: new RedisStore({
-    url: process.env.SESSION_REDIS_URL,
+    url: process.env.REDISCLOUD_URL || process.env.SESSION_REDIS_URL,
   }),
 }));
 app.use((req, res, next) => {
