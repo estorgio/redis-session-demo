@@ -1,32 +1,14 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
 const flash = require('connect-flash');
 const csurf = require('csurf')();
 
-require('dotenv').config();
+const session = require('./session');
 
 const app = express();
 
-app.use(session({
-  name: process.env.SESSION_NAME,
-  secret: process.env.SESSION_SECRET,
-  cookie: { maxAge: 604800000 }, // 7 days
-  resave: false,
-  saveUninitialized: false,
-  store: new RedisStore({
-    url: process.env.REDISCLOUD_URL || process.env.SESSION_REDIS_URL,
-  }),
-}));
-app.use((req, res, next) => {
-  if (!req.session) {
-    next(new Error('An error occured while loading session'));
-    return;
-  }
-  next();
-});
+app.use(session);
 
 app.set('view engine', 'ejs');
 
